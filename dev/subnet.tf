@@ -26,3 +26,17 @@ resource "aws_subnet" "public" {
     Name = each.value.name
   }
 }
+
+resource "aws_subnet" "private" {
+  for_each = var.private_subnets
+
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = each.value.cidr_block
+  availability_zone       = each.value.availability_zone
+  map_public_ip_on_launch = false
+
+  tags = {
+    Name = each.value.name
+  }
+}
+
