@@ -4,6 +4,6 @@ resource "aws_vpc" "main" {
   enable_dns_hostnames = true
 
   tags = {
-    Name = "a-vpc-steve-dev-ane2-01"
+    Name = local.vpc_name
   }
 }
