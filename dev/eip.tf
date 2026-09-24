@@ -1,8 +1,8 @@
-resource "aws_eip" "nat" {
-  domain = "vpc"
+# resource "aws_eip" "nat" {
+#   domain = "vpc"
 
-  tags = {
-    Name = "a-eip-steve-dev-ane2-nat01"
-  }
+#   tags = {
+#     Name = "a-eip-steve-dev-ane2-nat01"
+#   }
 
-}
+# }
