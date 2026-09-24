@@ -36,3 +36,13 @@ resource "aws_vpc_security_group_egress_rule" "bastion_https" {
   to_port     = 443
   ip_protocol = "tcp"
 }
+
+resource "aws_security_group" "import02" {
+  name        = "a-isg-steve-dev-ane2-import02"
+  description = "a-isg-steve-dev-ane2-import02"
+  vpc_id      = aws_vpc.main.id
+
+  tags = {
+    Name = "a-isg-steve-dev-ane2-import02"
+  }
+}
