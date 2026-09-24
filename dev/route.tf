@@ -47,3 +47,13 @@ resource "aws_route" "public_a_test" {
   destination_cidr_block = "203.0.113.10/32"
   gateway_id             = aws_internet_gateway.main.id
 }
+
+resource "aws_route_table_association" "private_a" {
+  subnet_id      = aws_subnet.private["private_a"].id
+  route_table_id = aws_route_table.private_a.id
+}
+
+resource "aws_route_table_association" "private_c" {
+  subnet_id      = aws_subnet.private["private_c"].id
+  route_table_id = aws_route_table.private_c.id
+}
