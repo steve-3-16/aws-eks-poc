@@ -29,3 +29,16 @@ resource "aws_route_table" "private_c" {
     Name = "a-irot-steve-dev-ane2-pri02"
   }
 }
+
+resource "aws_route_table" "compute" {
+  count = 2
+
+  vpc_id = aws_vpc.main.id
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${local.provider}-irot-${local.project}-${local.environment}-${local.region_code}-compute0${count.index + 1}"
+    }
+  )
+}
