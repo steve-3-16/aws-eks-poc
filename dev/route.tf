@@ -70,3 +70,10 @@ resource "aws_route_table_association" "private_c" {
   subnet_id      = aws_subnet.private["private_c"].id
   route_table_id = aws_route_table.private_c.id
 }
+
+resource "aws_route_table_association" "compute" {
+  count = 2
+
+  subnet_id      = aws_subnet.compute[count.index].id
+  route_table_id = aws_route_table.compute[count.index].id
+}
