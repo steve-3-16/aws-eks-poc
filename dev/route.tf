@@ -30,6 +30,19 @@ resource "aws_route_table" "private_c" {
   }
 }
 
+resource "aws_route_table" "compute" {
+  count = 2
+
+  vpc_id = aws_vpc.main.id
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${local.provider}-irot-${local.project}-${local.environment}-${local.region_code}-compute0${count.index + 1}"
+    }
+  )
+}
+
 resource "aws_route" "public_a" {
   route_table_id         = aws_route_table.public_a.id
   destination_cidr_block = "0.0.0.0/0"
