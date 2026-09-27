@@ -90,7 +90,7 @@ resource "aws_route_table" "vpce" {
   tags = merge(
     local.common_tags,
     {
-      Name = "${local.provider}-irot-${local.project}-${local.environment}-${local.region_code}-compute0${count.index + 1}"
+      Name = "${local.provider}-irot-${local.project}-${local.environment}-${local.region_code}-vpce0${count.index + 1}"
     }
   )
 }
