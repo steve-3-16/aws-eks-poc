@@ -1,10 +1,11 @@
 resource "aws_instance" "bastion" {
   ami                     = data.aws_ami.al2023.id
   instance_type           = "t3.micro"
-  disable_api_termination = true
+  disable_api_termination = false
 
-  subnet_id                   = aws_subnet.compute[0].id
-  private_ip                  = cidrhost(aws_subnet.compute[0].cidr_block, 10)
+  # Public Subnet A
+  subnet_id                   = aws_subnet.public["public_a"].id
+  private_ip                  = cidrhost(aws_subnet.public["public_a"].cidr_block, 10)
   associate_public_ip_address = var.associate_public_ip
 
   vpc_security_group_ids = [

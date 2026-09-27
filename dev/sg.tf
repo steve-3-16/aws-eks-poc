@@ -27,6 +27,16 @@ resource "aws_vpc_security_group_ingress_rule" "bastion_ssh" {
   ip_protocol                  = "tcp"
 }
 
+resource "aws_vpc_security_group_ingress_rule" "bastion_home_ssh" {
+  security_group_id = aws_security_group.bastion.id
+
+  description = "Allow SSH from my public IP"
+  ip_protocol = "tcp"
+  from_port   = 22
+  to_port     = 22
+  cidr_ipv4   = "182.231.63.14/32"
+}
+
 # Egress : Bastion → 198.51.100.20 HTTPS 443
 resource "aws_vpc_security_group_egress_rule" "bastion_https" {
   security_group_id = aws_security_group.bastion.id
