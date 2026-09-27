@@ -70,3 +70,26 @@ resource "aws_security_group" "common" {
     }
   )
 }
+
+resource "aws_security_group" "vpce_ecr" {
+  name        = "${local.provider}-isg-${local.project}-${local.environment}-${local.region_code}-vpce-ecr01"
+  description = "Security group for ECR and STS interface VPC endpoints"
+  vpc_id      = aws_vpc.main.id
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${local.provider}-isg-${local.project}-${local.environment}-${local.region_code}-vpce-ecr01"
+    }
+  )
+}
+
+resource "aws_vpc_security_group_ingress_rule" "vpce_ecr_https" {
+  security_group_id = aws_security_group.bastion.id
+
+  cidr_ipv4   = var.vpc_cidr
+  from_port   = 443
+  to_port     = 443
+  ip_protocol = "tcp"
+  description = "Allow HTTPS from VPC"
+}

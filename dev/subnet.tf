@@ -55,3 +55,19 @@ resource "aws_subnet" "compute" {
     }
   )
 }
+
+resource "aws_subnet" "vpce" {
+  count = 2
+
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.${41 + count.index}.0/24"
+  availability_zone       = count.index == 0 ? "ap-northeast-2a" : "ap-northeast-2c"
+  map_public_ip_on_launch = false
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${local.provider}-isnet-${local.project}-${local.environment}-${local.region_code}-vpce0${count.index + 1}"
+    }
+  )
+}
