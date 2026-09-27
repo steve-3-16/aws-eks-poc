@@ -31,10 +31,11 @@ resource "aws_vpc_security_group_ingress_rule" "bastion_ssh" {
 resource "aws_vpc_security_group_egress_rule" "bastion_https" {
   security_group_id = aws_security_group.bastion.id
 
-  cidr_ipv4   = "198.51.100.20/32"
+  cidr_ipv4   = "0.0.0.0/0"
   from_port   = 443
   to_port     = 443
   ip_protocol = "tcp"
+  description = "Allow HTTPS outbound traffic"
 }
 
 resource "aws_security_group" "import02" {
@@ -45,4 +46,17 @@ resource "aws_security_group" "import02" {
   tags = {
     Name = "a-isg-steve-dev-ane2-import02"
   }
+}
+
+resource "aws_security_group" "common" {
+  name        = "a-isg-steve-dev-ane2-common01"
+  description = "Common security group"
+  vpc_id      = aws_vpc.main.id
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "a-isg-steve-dev-ane2-common01"
+    }
+  )
 }

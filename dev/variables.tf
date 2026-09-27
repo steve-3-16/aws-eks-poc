@@ -33,3 +33,9 @@ variable "enable_imds_v2" {
   type        = bool
   default     = true
 }
+
+variable "associate_public_ip" {
+  description = "Whether to associate a public IP"
+  type        = bool
+  default     = true
+}
