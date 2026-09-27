@@ -3,7 +3,8 @@ resource "aws_instance" "bastion" {
   instance_type           = "t3.micro"
   disable_api_termination = false
 
-  key_name = aws_key_pair.bastion.key_name
+  #key_name = aws_key_pair.bastion.key_name
+  key_name = data.aws_key_pair.bastion_console.key_name
 
   subnet_id                   = aws_subnet.public["public_a"].id
   private_ip                  = cidrhost(aws_subnet.public["public_a"].cidr_block, 10)
