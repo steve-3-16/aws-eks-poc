@@ -34,7 +34,7 @@ Planned or configured endpoints include:
 
 ## Bastion Host
 
-The Bastion host is deployed in a public subnet.
+The Bastion host is deployed in a public subnet and is used as a management server for AWS and EKS resources.
 
 - OS: Amazon Linux 2023
 - Instance Type: t3.micro
@@ -44,7 +44,22 @@ The Bastion host is deployed in a public subnet.
 - IAM Instance Profile: SSM permissions
 - User Data: Initial management tool installation
 
-The Bastion host is used as a management server for AWS and EKS resources.
+### Installed Packages
+
+The following tools are installed on the Bastion host through User Data.
+
+| Package | Version | Purpose |
+|---|---|---|
+| AWS CLI | 2.33.15 | Manage AWS resources from the command line |
+| Git | 2.50.1 | Manage source code and Git repositories |
+| jq | 1.8.1 | Process and filter JSON data |
+| Docker | 25.0.14 | Build and manage container images |
+| kubectl | 1.36.2 | Manage Kubernetes and Amazon EKS resources |
+| eksctl | 0.215.0 | Create and manage Amazon EKS clusters |
+| Helm | 3.21.4 | Manage Kubernetes applications using Helm charts |
+| curl | 8.21.0 | Send HTTP/HTTPS requests and test endpoints |
+
+Package versions are explicitly managed where applicable to maintain compatibility with the EKS environment.
 
 ## Terraform Command Reference
 
