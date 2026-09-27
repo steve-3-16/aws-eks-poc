@@ -18,3 +18,20 @@ resource "aws_key_pair" "bastion" {
     }
   )
 }
+
+resource "tls_private_key" "bastion_terraform" {
+  algorithm = "RSA"
+  rsa_bits  = 2048
+}
+
+resource "aws_key_pair" "bastion_terraform" {
+  key_name   = "a-key-steve-dev-ane2-bastion-terraform01"
+  public_key = tls_private_key.bastion_terraform.public_key_openssh
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "a-key-steve-dev-ane2-bastion-terraform01"
+    }
+  )
+}
