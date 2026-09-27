@@ -27,3 +27,9 @@ variable "private_subnets" {
     }
   }
 }
+
+variable "enable_imds_v2" {
+  description = "Whether to enable IMDSv2"
+  type        = bool
+  default     = true
+}
