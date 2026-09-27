@@ -80,3 +80,25 @@ resource "aws_route_table_association" "bastion_public" {
   subnet_id      = aws_subnet.public["public_a"].id
   route_table_id = aws_route_table.public_a.id
 }
+
+# VPCE Route Table
+resource "aws_route_table" "vpce" {
+  count = 2
+
+  vpc_id = aws_vpc.main.id
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${local.provider}-irot-${local.project}-${local.environment}-${local.region_code}-compute0${count.index + 1}"
+    }
+  )
+}
+
+# Compute subnet association
+resource "aws_route_table_association" "vpce" {
+  count = 2
+
+  subnet_id      = aws_subnet.vpce[count.index].id
+  route_table_id = aws_route_table.vpce[count.index].id
+}
