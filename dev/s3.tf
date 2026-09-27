@@ -1,11 +1,11 @@
 resource "aws_s3_bucket" "poc" {
-  bucket        = "sunggwan-steve-dev-ane2-poc"
+  bucket        = "steve-dev-ane2-poc"
   force_destroy = false
 
   tags = merge(
     local.common_tags,
     {
-      Name = "sunggwan-steve-dev-ane2-poc"
+      Name = "steve-dev-ane2-poc"
     }
   )
 }
