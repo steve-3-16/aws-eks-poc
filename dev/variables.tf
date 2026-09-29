@@ -39,3 +39,20 @@ variable "associate_public_ip" {
   type        = bool
   default     = true
 }
+
+variable "eks_node_ami_id" {
+  description = "Golden AMI ID for EKS worker nodes"
+  type        = string
+}
+
+variable "eks_node_instance_type" {
+  description = "Instance type for EKS worker nodes"
+  type        = string
+  default     = "t3.medium"
+}
+
+variable "eks_node_volume_size" {
+  description = "Root EBS volume size"
+  type        = number
+  default     = 20
+}

@@ -14,3 +14,7 @@ locals {
     ManagedBy   = "terraform"
   }
 }
+
+locals {
+  eks_node_lt_name = "${local.provider}-lt-${local.project}-${local.environment}-${local.region_code}-eks-node"
+}
