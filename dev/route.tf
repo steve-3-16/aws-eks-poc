@@ -102,3 +102,40 @@ resource "aws_route_table_association" "vpce" {
   subnet_id      = aws_subnet.vpce[count.index].id
   route_table_id = aws_route_table.vpce[count.index].id
 }
+
+# DB Route Table
+resource "aws_route_table" "db" {
+  count = 2
+
+  vpc_id = aws_vpc.main.id
+
+  tags = merge(local.common_tags, {
+    Name = "${local.provider}-irot-${local.project}-${local.environment}-${local.region_code}-db0${count.index + 1}"
+  })
+}
+
+resource "aws_route_table_association" "db" {
+  count = 2
+
+  subnet_id      = aws_subnet.db[count.index].id
+  route_table_id = aws_route_table.db[count.index].id
+}
+
+
+# TGW Route Table
+resource "aws_route_table" "tgw" {
+  count = 2
+
+  vpc_id = aws_vpc.main.id
+
+  tags = merge(local.common_tags, {
+    Name = "${local.provider}-irot-${local.project}-${local.environment}-${local.region_code}-tgw0${count.index + 1}"
+  })
+}
+
+resource "aws_route_table_association" "tgw" {
+  count = 2
+
+  subnet_id      = aws_subnet.tgw[count.index].id
+  route_table_id = aws_route_table.tgw[count.index].id
+}
