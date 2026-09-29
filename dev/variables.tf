@@ -4,26 +4,26 @@ variable "vpc_cidr" {
   default     = "10.0.0.0/16"
 }
 
-variable "private_subnets" {
+variable "elb_subnets" {
   type = map(object({
     cidr_block        = string
     availability_zone = string
     name              = string
   }))
 
-  description = "Private subnet configuration"
+  description = "ELB subnet configuration"
 
   default = {
-    private_a = {
+    elb_a = {
       cidr_block        = "10.0.11.0/24"
       availability_zone = "ap-northeast-2a"
-      name              = "a-isnet-steve-dev-ane2-compute01"
+      name              = "a-isnet-steve-dev-ane2-elb01"
     }
 
-    private_c = {
+    elb_c = {
       cidr_block        = "10.0.12.0/24"
       availability_zone = "ap-northeast-2c"
-      name              = "a-isnet-steve-dev-ane2-compute02"
+      name              = "a-isnet-steve-dev-ane2-elb02"
     }
   }
 }
