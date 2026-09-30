@@ -56,3 +56,34 @@ variable "eks_node_volume_size" {
   type        = number
   default     = 20
 }
+
+# ELB variable
+variable "nlb_tg_port" {
+  description = "NLB target group port"
+  type        = number
+  default     = 80
+}
+
+variable "nlb_tg_protocol" {
+  description = "NLB target group protocol"
+  type        = string
+  default     = "TCP"
+}
+
+variable "nlb_tg_health_check_protocol" {
+  description = "NLB target group health check protocol"
+  type        = string
+  default     = "HTTP"
+}
+
+variable "nlb_tg_health_check_path" {
+  description = "NLB target group health check path"
+  type        = string
+  default     = "/health"
+}
+
+variable "nlb_tg_health_check_interval" {
+  description = "NLB target group health check interval"
+  type        = number
+  default     = 30
+}
