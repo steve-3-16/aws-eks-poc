@@ -1,4 +1,4 @@
-resource "aws_lb_target_group" "nlb_bastion" {
+resource "aws_lb_target_group" "private_nlb" {
   name        = "a-tg-steve-dev-ane2-nlb01"
   port        = var.nlb_tg_port
   protocol    = var.nlb_tg_protocol
@@ -21,8 +21,8 @@ resource "aws_lb_target_group" "nlb_bastion" {
   })
 }
 
-resource "aws_lb_target_group_attachment" "nlb_bastion" {
-  target_group_arn = aws_lb_target_group.nlb_bastion.arn
+resource "aws_lb_target_group_attachment" "private_nlb" {
+  target_group_arn = aws_lb_target_group.private_nlb.arn
   target_id        = aws_instance.bastion.id
   port             = var.nlb_tg_port
 }

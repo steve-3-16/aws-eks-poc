@@ -93,3 +93,36 @@ resource "aws_vpc_security_group_ingress_rule" "vpce_ecr_https" {
   ip_protocol = "tcp"
   description = "Allow HTTPS from VPC"
 }
+
+resource "aws_security_group" "private_nlb" {
+  name        = "${local.provider}-esg-${local.project}-${local.environment}-${local.region_code}-nlb01"
+  description = "Security group for private nlb"
+  vpc_id      = aws_vpc.main.id
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${local.provider}-esg-${local.project}-${local.environment}-${local.region_code}-nlb01"
+    }
+  )
+
+}
+
+resource "aws_vpc_security_group_ingress_rule" "private_nlb" {
+  security_group_id = aws_security_group.private_nlb.id
+
+  cidr_ipv4   = var.vpc_cidr
+  from_port   = 80
+  to_port     = 80
+  ip_protocol = "tcp"
+  description = "Allow HTTPS from VPC"
+}
+
+resource "aws_vpc_security_group_egress_rule" "private_nlb" {
+  security_group_id = aws_security_group.private_nlb.id
+
+  cidr_ipv4   = "0.0.0.0/0"
+  ip_protocol = "-1"
+  description = "Allow outbound traffic"
+}
+
