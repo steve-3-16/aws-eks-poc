@@ -20,3 +20,8 @@ output "eks_node_launch_template_latest_version" {
   description = "Latest Launch Template version"
   value       = aws_launch_template.eks_node.latest_version
 }
+
+output "prefix_list_id" {
+  description = "ID of the managed prefix list"
+  value       = aws_ec2_managed_prefix_list.test.id
+}

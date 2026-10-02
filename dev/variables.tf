@@ -87,3 +87,36 @@ variable "nlb_tg_health_check_interval" {
   type        = number
   default     = 30
 }
+
+variable "prefix_list_name" {
+  type        = string
+  description = "Name of the managed prefix list"
+  default     = "test-prefix-list"
+}
+
+variable "prefix_list_max_entries" {
+  type        = number
+  description = "Maximum number of entries in the prefix list"
+  default     = 10
+}
+
+variable "prefix_list_entries" {
+  type = list(object({
+    cidr        = string
+    description = string
+  }))
+
+  description = "Entries for the managed prefix list"
+
+  default = [
+    {
+      cidr        = "172.16.10.0/24"
+      description = "test-network-01"
+    },
+    {
+      cidr        = "172.16.20.0/24"
+      description = "test-network-02"
+    }
+  ]
+}
+
