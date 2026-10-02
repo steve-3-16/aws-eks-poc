@@ -11,8 +11,6 @@ variable "elb_subnets" {
     name              = string
   }))
 
-  description = "ELB subnet configuration"
-
   default = {
     elb_a = {
       cidr_block        = "10.0.11.0/24"
@@ -26,6 +24,8 @@ variable "elb_subnets" {
       name              = "a-isnet-steve-dev-ane2-elb02"
     }
   }
+
+  description = "ELB subnet configuration"
 }
 
 variable "enable_imds_v2" {
@@ -120,3 +120,35 @@ variable "prefix_list_entries" {
   ]
 }
 
+variable "bastion_ami_id" {
+  type        = string
+  default     = "ami-068b9b022a1cc74f1"
+  description = "AMI ID for bastion"
+}
+
+variable "nlb_scheme" {
+  type        = bool
+  default     = true
+  description = "NLB scheme: internal or internet-facing"
+}
+
+variable "nlb_listner_port" {
+  type        = number
+  default     = 80
+  description = "NLB listner port"
+
+}
+
+variable "nlb_listner_protocol" {
+  type        = string
+  default     = "TCP"
+  description = "NLB listener protocol"
+
+}
+
+variable "nlb_cross_zone_enabled" {
+  type        = bool
+  default     = false
+  description = "Enable cross-zone load balancing"
+
+}

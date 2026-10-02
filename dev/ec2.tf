@@ -1,5 +1,6 @@
 resource "aws_instance" "bastion" {
-  ami                     = data.aws_ami.al2023.id
+  #ami                     = data.aws_ami.al2023.id
+  ami                     = var.bastion_ami_id
   instance_type           = "t3.micro"
   disable_api_termination = false
 

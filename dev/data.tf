@@ -1,3 +1,4 @@
+/*
 data "aws_ami" "al2023" {
   most_recent = true
   owners      = ["amazon"]
@@ -17,6 +18,7 @@ data "aws_ami" "al2023" {
     values = ["ebs"]
   }
 }
+*/
 
 data "aws_key_pair" "bastion_console" {
   key_name = "a-key-steve-dev-ane2-bastion-console01"
