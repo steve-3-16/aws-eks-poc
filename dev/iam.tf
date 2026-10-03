@@ -32,9 +32,9 @@ resource "aws_iam_instance_profile" "bastion" {
   role = aws_iam_role.bastion.name
 }
 
-# EKS Role, Policy
+# EKS Cluster Role, Policy
 resource "aws_iam_role" "eks_cluster" {
-  name = "${local.provider}-iam-role-${local.project}-${local.environment}-${local.region_code}-eks-cluster01"
+  name = "${local.provider}-iam-ro-${local.project}-${local.environment}-${local.region_code}-eks-cluster01"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -55,7 +55,7 @@ resource "aws_iam_role" "eks_cluster" {
   tags = merge(
     local.common_tags,
     {
-      Name = "${local.provider}-iam-role-${local.project}-${local.environment}-${local.region_code}-eks-cluster01"
+      Name = "${local.provider}-iamro-${local.project}-${local.environment}-${local.region_code}-eks-cluster01"
     }
   )
 }
@@ -63,5 +63,43 @@ resource "aws_iam_role" "eks_cluster" {
 resource "aws_iam_role_policy_attachment" "eks_cluster" {
   role       = aws_iam_role.eks_cluster.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+}
+
+# EKS Node Role, Policy
+resource "aws_iam_role" "eks_node" {
+  name = "${local.provider}-iam-ro-${local.project}-${local.environment}-${local.region_code}-eks-node01"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+
+    Statement = [
+      {
+        Effect = "Allow"
+
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${local.provider}-iamro-${local.project}-${local.environment}-${local.region_code}-eks-node01"
+    }
+  )
+}
+
+resource "aws_iam_role_policy_attachment" "eks_node_worker" {
+  role       = aws_iam_role.eks_node.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "eks_node_ecr" {
+  role       = aws_iam_role.eks_node.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPullOnly"
 }
 
