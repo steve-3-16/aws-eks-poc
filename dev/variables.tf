@@ -152,3 +152,43 @@ variable "nlb_cross_zone_enabled" {
   description = "Enable cross-zone load balancing"
 
 }
+
+# ALB Variable
+variable "alb_scheme" {
+  type        = string
+  default     = "internal"
+  description = "ALB scheme: internal or internet-facing"
+}
+
+variable "alb_listener_port" {
+  type        = number
+  default     = 80
+  description = "ALB listner port"
+
+}
+
+variable "alb_listener_protocol" {
+  type        = string
+  default     = "HTTP"
+  description = "ALB listener protocol"
+
+}
+
+variable "alb_tg_port" {
+  type        = number
+  default     = 80
+  description = "ALB target group port"
+}
+
+variable "alb_tg_protocol" {
+  type        = string
+  default     = "HTTP"
+  description = "ALB target group protocol"
+}
+
+variable "alb_health_check_path" {
+  type        = string
+  default     = "/"
+  description = "ALB target group health check path"
+}
+
