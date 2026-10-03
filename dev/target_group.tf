@@ -1,4 +1,4 @@
-resource "aws_lb_target_group" "private_nlb" {
+/*resource "aws_lb_target_group" "private_nlb" {
   name        = "a-tg-steve-dev-ane2-nlb01"
   port        = var.nlb_tg_port
   protocol    = var.nlb_tg_protocol
@@ -26,3 +26,4 @@ resource "aws_lb_target_group_attachment" "private_nlb" {
   target_id        = aws_instance.bastion.id
   port             = var.nlb_tg_port
 }
+*/

@@ -1,3 +1,4 @@
+/*
 resource "aws_instance" "bastion" {
   #ami                     = data.aws_ami.al2023.id
   ami                     = var.bastion_ami_id
@@ -40,3 +41,4 @@ resource "aws_instance" "bastion" {
     }
   )
 }
+*/

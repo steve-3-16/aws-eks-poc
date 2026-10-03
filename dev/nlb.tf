@@ -1,3 +1,4 @@
+/*
 resource "aws_lb" "private_nlb" {
   name               = "${local.provider}-nlb-${local.project}-${local.environment}-${local.region_code}-nlb01"
   internal           = var.nlb_scheme == "internal"
@@ -32,3 +33,4 @@ resource "aws_lb_listener" "private_nlb" {
     target_group_arn = aws_lb_target_group.private_nlb.arn
   }
 }
+*/
