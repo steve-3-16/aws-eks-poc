@@ -139,3 +139,31 @@ resource "aws_route_table_association" "tgw" {
   subnet_id      = aws_subnet.tgw[count.index].id
   route_table_id = aws_route_table.tgw[count.index].id
 }
+
+# EKS RouteTable , association
+resource "aws_route_table" "eks_a" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "a-irot-steve-dev-ane2-eks01"
+  }
+}
+
+resource "aws_route_table" "eks_c" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "a-irot-steve-dev-ane2-eks02"
+  }
+}
+
+resource "aws_route_table_association" "eks_a" {
+  subnet_id      = aws_subnet.eks[0].id
+  route_table_id = aws_route_table.eks_a.id
+}
+
+resource "aws_route_table_association" "eks_c" {
+  subnet_id      = aws_subnet.eks[1].id
+  route_table_id = aws_route_table.eks_c.id
+}
+

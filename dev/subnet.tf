@@ -98,3 +98,20 @@ resource "aws_subnet" "tgw" {
     Name = "${local.provider}-isnet-${local.project}-${local.environment}-${local.region_code}-tgw0${count.index + 1}"
   })
 }
+
+resource "aws_subnet" "eks" {
+  count = 2
+
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.${71 + count.index}.0/24"
+  availability_zone       = count.index == 0 ? "ap-northeast-2a" : "ap-northeast-2c"
+  map_public_ip_on_launch = false
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${local.provider}-isnet-${local.project}-${local.environment}-${local.region_code}-eks0${count.index + 1}"
+    }
+  )
+}
+
