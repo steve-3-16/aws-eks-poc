@@ -205,3 +205,25 @@ resource "aws_vpc_security_group_egress_rule" "alb" {
 
   description = "Allow outbound traffic"
 }
+
+resource "aws_security_group" "aurora_mysql" {
+  name        = "${local.provider}-isg-${local.project}-${local.environment}-${local.region_code}-aurora-mysql01"
+  description = "Security group for Aurora MySQL"
+  vpc_id      = aws_vpc.main.id
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${local.provider}-isg-${local.project}-${local.environment}-${local.region_code}-aurora-mysql01"
+    }
+  )
+}
+
+resource "aws_vpc_security_group_ingress_rule" "aurora_mysql" {
+  security_group_id = aws_security_group.aurora_mysql.id
+  cidr_ipv4         = var.vpc_cidr
+  from_port         = var.aurora_mysql_port
+  to_port           = var.aurora_mysql_port
+  ip_protocol       = "tcp"
+  description       = "Allow MySQL access from VPC"
+}

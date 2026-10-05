@@ -295,3 +295,125 @@ variable "eks_node_max_size" {
   default     = 2
   description = "Max number of EKS worker nodes"
 }
+
+# RDS
+variable "aurora_cluster_identifier" {
+  type        = string
+  default     = "a-rds-steve-dev-ane2-aurora01"
+  description = "Aurora MySQL cluster identifier"
+}
+
+variable "aurora_engine_version_mode" {
+  type        = string
+  default     = "latest"
+  description = "Aurora MySQL engine version selection mode: latest or fixed"
+
+  validation {
+    condition = contains(
+      ["latest", "fixed"],
+      var.aurora_engine_version_mode
+    )
+
+    error_message = "aurora_engine_version_mode must be latest or fixed."
+  }
+}
+
+variable "aurora_engine_version" {
+  type        = string
+  default     = "null"
+  description = "Fixed Aurora MySQL engine version when version mode is fixed"
+}
+
+variable "aurora_instance_class" {
+  type        = string
+  default     = "db.t3.medium"
+  description = "Aurora MySQL DB instance class"
+}
+
+variable "aurora_master_username" {
+  type        = string
+  default     = "admin"
+  description = "Aurora MySQL master username"
+}
+
+variable "aurora_manage_master_user_password" {
+  type        = bool
+  default     = true
+  description = "Whether Aurora manages the master user password in AWS Secrets Manager"
+}
+
+variable "aurora_mysql_port" {
+  type        = number
+  default     = 3306
+  description = "Aurora MySQL port"
+}
+
+variable "aurora_replica_count" {
+  type        = number
+  default     = 0
+  description = "Number of Aurora read replicas"
+}
+
+variable "aurora_backup_retention_period" {
+  type        = number
+  default     = 7
+  description = "Aurora automated backup retention period in days"
+}
+
+variable "aurora_storage_encrypted" {
+  type        = bool
+  default     = true
+  description = "Whether Aurora storage encryption is enabled"
+}
+
+variable "aurora_auto_minor_version_upgrade" {
+  type        = bool
+  default     = true
+  description = "Whether automatic minor version upgrades are enabled"
+}
+
+variable "aurora_deletion_protection" {
+  type        = bool
+  default     = false
+  description = "Whether Aurora deletion protection is enabled"
+}
+
+variable "aurora_skip_final_snapshot" {
+  type        = bool
+  default     = true
+  description = "Whether to skip the final snapshot when deleting the Aurora cluster"
+}
+
+variable "aurora_copy_tags_to_snapshot" {
+  type        = bool
+  default     = true
+  description = "Whether tags are copied to Aurora snapshots"
+}
+
+variable "aurora_apply_immediately" {
+  type        = bool
+  default     = false
+  description = "Whether Aurora modifications are applied immediately"
+}
+
+variable "aurora_cloudwatch_log_exports" {
+  type = list(string)
+
+  default = [
+    "general"
+  ]
+
+  description = "Aurora MySQL logs exported to CloudWatch Logs"
+}
+
+variable "rds_proxy_enabled" {
+  type        = bool
+  default     = false
+  description = "Whether RDS Proxy is enabled"
+}
+
+variable "aurora_iam_database_authentication_enabled" {
+  type        = bool
+  default     = false
+  description = "Whether IAM database authentication is enabled"
+}
