@@ -192,3 +192,106 @@ variable "alb_health_check_path" {
   description = "ALB target group health check path"
 }
 
+# EKS Cluster variable
+variable "eks_cluster_name" {
+  type        = string
+  default     = "a-eks-steve-dev-ane2-cluster01"
+  description = "EKS cluster name"
+}
+
+variable "eks_cluster_version" {
+  type        = string
+  default     = "1.36"
+  description = "Kubernetes version for EKS cluster"
+}
+
+variable "eks_endpoint_access" {
+  type        = string
+  default     = "private"
+  description = "EKS endpoint access mode: private, public, or public-and-private"
+}
+
+variable "eks_authentication_mode" {
+  type        = string
+  default     = "API"
+  description = "EKS cluster authentication mode"
+}
+
+variable "eks_bootstrap_cluster_admin" {
+  type        = bool
+  default     = true
+  description = "Enable cluster creator administrator permissions"
+}
+
+variable "eks_upgrade_support_type" {
+  type        = string
+  default     = "STANDARD"
+  description = "EKS Kubernetes version support policy"
+}
+
+variable "eks_deletion_protection" {
+  type        = bool
+  default     = false
+  description = "Enable EKS cluster deletion protection"
+}
+
+variable "eks_control_plane_scaling_tier" {
+  type        = string
+  default     = "standard"
+  description = "EKS control plane scaling tier"
+}
+
+variable "eks_zonal_shift_enabled" {
+  type        = bool
+  default     = false
+  description = "Enable ARC zonal shift for EKS cluster"
+}
+
+variable "eks_cluster_log_types" {
+  type = list(string)
+
+  default = [
+    "api",
+    "audit",
+    "authenticator"
+  ]
+
+  description = "Enabled EKS control plane log types"
+}
+
+# EKS NodeGroup variable
+variable "eks_node_group_name" {
+  type        = string
+  default     = "a-eks-steve-dev-ane2-node01"
+  description = "EKS managed node group name"
+}
+
+variable "eks_node_capacity_type" {
+  type        = string
+  default     = "SPOT"
+  description = "EKS managed node group capacity type"
+}
+
+variable "eks_node_instance_types" {
+  type        = list(string)
+  default     = ["t3.small"]
+  description = "EC2 instance types for EKS managed node group"
+}
+
+variable "eks_describe_size" {
+  type        = number
+  default     = 2
+  description = "Desired number of EKS worker nodes"
+}
+
+variable "eks_node_min_size" {
+  type        = number
+  default     = 2
+  description = "Minimum number of EKS worker nodes"
+}
+
+variable "eks_node_max_size" {
+  type        = number
+  default     = 2
+  description = "Max number of EKS worker nodes"
+}
