@@ -296,6 +296,12 @@ variable "eks_node_max_size" {
   description = "Max number of EKS worker nodes"
 }
 
+variable "eks_service_ipv4_cidr" {
+  type        = string
+  default     = "172.20.0.0/16"
+  description = "IPv4 CIDR block for Kubernetes services in the EKS cluster"
+}
+
 # RDS
 variable "aurora_cluster_identifier" {
   type        = string

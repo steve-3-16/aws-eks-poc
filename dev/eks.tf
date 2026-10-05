@@ -1,5 +1,5 @@
 # EKS Cluster
-/*resource "aws_eks_cluster" "steve_cluster" {
+resource "aws_eks_cluster" "steve_cluster" {
   name     = var.eks_cluster_name
   role_arn = aws_iam_role.eks_cluster.arn
   version  = var.eks_cluster_version
@@ -42,6 +42,10 @@
     )
   }
 
+  kubernetes_network_config {
+    service_ipv4_cidr = var.eks_service_ipv4_cidr
+  }
+
   tags = merge(
     local.common_tags,
     {
@@ -50,7 +54,7 @@
   )
 
   depends_on = [aws_iam_role_policy_attachment.eks_cluster]
-}*/
+}
 
 /*# NodeGroup
 resource "aws_eks_node_group" "steve_node_group" {
