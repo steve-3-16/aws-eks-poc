@@ -32,9 +32,13 @@ resource "aws_lb_listener" "private_nlb" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.private_nlb.arn
   }
-}
+}*/
 
-resource "aws_lb" "alb" {
+# ============================================================
+# Application Load Balancer
+# ============================================================
+
+/*resource "aws_lb" "alb" {
   name               = "${local.provider}-alb-${local.project}-${local.environment}-${local.region_code}-alb01"
   internal           = var.alb_scheme == "internal"
   load_balancer_type = "application"
@@ -55,14 +59,35 @@ resource "aws_lb" "alb" {
   )
 }
 
+# ============================================================
+# ALB Listener
+# ============================================================
+
 resource "aws_lb_listener" "alb" {
+  for_each = var.alb_listeners
+
   load_balancer_arn = aws_lb.alb.arn
-  port              = var.alb_listener_port
-  protocol          = var.alb_listener_protocol
+  port              = each.value.port
+  protocol          = each.value.protocol
+
+  # HTTPS Listner only
+  certificate_arn = each.value.protocol == "HTTPS" ? aws_acm_certificate.internal_alb.arn : null
 
   default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.alb.arn
+    type = each.value.action_type
+
+    # Forward Listener
+    target_group_arn = each.value.action_type == "forward" ? aws_lb_target_group.alb.arn : null
+
+    # Redirect Listener
+    dynamic "redirect" {
+      for_each = each.value.action_type == "redirect" ? [1] : []
+
+      content {
+        port        = tostring(each.value.redirect_port)
+        protocol    = "HTTPS"
+        status_code = "HTTP_301"
+      }
+    }
   }
-}
-*/
+}*/

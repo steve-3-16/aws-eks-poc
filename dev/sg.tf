@@ -173,38 +173,7 @@ resource "aws_vpc_security_group_egress_rule" "private_nlb" {
 # ALB
 # ============================================================
 
-resource "aws_security_group" "alb" {
-  name        = "${local.provider}-esg-${local.project}-${local.environment}-${local.region_code}-alb01"
-  description = "Security group for ALB"
-  vpc_id      = aws_vpc.main.id
 
-  tags = merge(
-    local.common_tags,
-    {
-      Name = "${local.provider}-esg-${local.project}-${local.environment}-${local.region_code}-alb01"
-    }
-  )
-}
-
-resource "aws_vpc_security_group_ingress_rule" "alb" {
-  security_group_id = aws_security_group.alb.id
-
-  cidr_ipv4   = var.vpc_cidr
-  from_port   = var.alb_listener_port
-  to_port     = var.alb_listener_port
-  ip_protocol = "tcp"
-
-  description = "Allow traffic to ALB"
-}
-
-resource "aws_vpc_security_group_egress_rule" "alb" {
-  security_group_id = aws_security_group.alb.id
-
-  cidr_ipv4   = "0.0.0.0/0"
-  ip_protocol = "-1"
-
-  description = "Allow outbound traffic"
-}
 
 resource "aws_security_group" "aurora_mysql" {
   name        = "${local.provider}-isg-${local.project}-${local.environment}-${local.region_code}-aurora-mysql01"
@@ -226,4 +195,43 @@ resource "aws_vpc_security_group_ingress_rule" "aurora_mysql" {
   to_port           = var.aurora_mysql_port
   ip_protocol       = "tcp"
   description       = "Allow MySQL access from VPC"
+}
+
+# ============================================================
+# ALB Security Group
+# ============================================================
+
+resource "aws_security_group" "alb" {
+  name        = "${local.provider}-esg-${local.project}-${local.environment}-${local.region_code}-alb01"
+  description = "Security group for ALB"
+  vpc_id      = aws_vpc.main.id
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${local.provider}-esg-${local.project}-${local.environment}-${local.region_code}-alb01"
+    }
+  )
+}
+
+resource "aws_vpc_security_group_ingress_rule" "alb_listener" {
+  for_each = var.alb_listeners
+
+  security_group_id = aws_security_group.alb.id
+
+  cidr_ipv4   = var.vpc_cidr
+  from_port   = each.value.port
+  to_port     = each.value.port
+  ip_protocol = "tcp"
+
+  description = "Allow ALB listener port ${each.value.port}"
+}
+
+resource "aws_vpc_security_group_egress_rule" "alb" {
+  security_group_id = aws_security_group.alb.id
+
+  cidr_ipv4   = "0.0.0.0/0"
+  ip_protocol = "-1"
+
+  description = "Allow outbound traffic"
 }

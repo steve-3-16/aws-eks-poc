@@ -153,37 +153,57 @@ variable "nlb_cross_zone_enabled" {
 
 }
 
-# ALB Variable
+# ============================================================
+# ALB Variables
+# ============================================================
 variable "alb_scheme" {
   type        = string
   default     = "internal"
   description = "ALB scheme: internal or internet-facing"
 }
 
-variable "alb_listener_port" {
-  type        = number
-  default     = 80
-  description = "ALB listner port"
+variable "alb_listeners" {
+  type = map(object({
+    port          = number
+    protocol      = string
+    action_type   = string
+    redirect_port = optional(number)
+  }))
 
-}
+  default = {
+    listner_80 = {
+      port          = 80
+      protocol      = "HTTP"
+      action_type   = "redirect"
+      redirect_port = 443
+    }
 
-variable "alb_listener_protocol" {
-  type        = string
-  default     = "HTTP"
-  description = "ALB listener protocol"
+    listener_443 = {
+      port        = 443
+      protocol    = "HTTPS"
+      action_type = "forward"
+    }
 
-}
+    listener_8091 = {
+      port        = 8091
+      protocol    = "HTTP"
+      action_type = "forward"
+    }
+  }
 
-variable "alb_tg_port" {
-  type        = number
-  default     = 80
-  description = "ALB target group port"
+  description = "ALB listener configuration"
 }
 
 variable "alb_tg_protocol" {
   type        = string
   default     = "HTTP"
   description = "ALB target group protocol"
+}
+
+variable "alb_tg_port" {
+  type        = number
+  default     = 80
+  description = "ALB target group port"
 }
 
 variable "alb_health_check_path" {

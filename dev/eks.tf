@@ -1,4 +1,4 @@
-# EKS Cluster
+/*# EKS Cluster
 resource "aws_eks_cluster" "steve_cluster" {
   name     = var.eks_cluster_name
   role_arn = aws_iam_role.eks_cluster.arn
