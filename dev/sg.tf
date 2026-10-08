@@ -235,3 +235,39 @@ resource "aws_vpc_security_group_egress_rule" "alb" {
 
   description = "Allow outbound traffic"
 }
+
+resource "aws_security_group" "web" {
+  name        = "${local.provider}-isg-${local.project}-${local.environment}-${local.region_code}-web01"
+  description = "Security group for Web EC2"
+  vpc_id      = aws_vpc.main.id
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${local.provider}-isg-${local.project}-${local.environment}-${local.region_code}-web01"
+    }
+  )
+}
+
+# Allow HTTP traffic from ALB
+resource "aws_vpc_security_group_ingress_rule" "web_http" {
+  security_group_id = aws_security_group.web.id
+
+  referenced_security_group_id = aws_security_group.alb.id
+
+  from_port   = 80
+  to_port     = 80
+  ip_protocol = "tcp"
+
+  description = "Allow HTTP from ALB"
+}
+
+# Allow outbound traffic
+resource "aws_vpc_security_group_egress_rule" "web" {
+  security_group_id = aws_security_group.web.id
+
+  cidr_ipv4   = "0.0.0.0/0"
+  ip_protocol = "-1"
+
+  description = "Allow outbound traffic"
+}

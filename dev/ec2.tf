@@ -42,3 +42,26 @@ resource "aws_instance" "bastion" {
   )
 }
 */
+
+resource "aws_instance" "web" {
+  count = var.web_instance_count
+
+  ami           = data.aws_ami.golden.id
+  instance_type = var.web_instance_type
+
+  subnet_id              = aws_subnet.compute[count.index].id
+  vpc_security_group_ids = [aws_security_group.web.id]
+
+  associate_public_ip_address = false
+  key_name                    = data.aws_key_pair.web.key_name
+
+  root_block_device {
+    volume_type = "gp3"
+    volume_size = 8
+    encrypted   = true
+  }
+
+  tags = {
+    Name = "steve-web-${count.index + 1}"
+  }
+}

@@ -23,3 +23,18 @@ data "aws_ami" "al2023" {
 data "aws_key_pair" "bastion_console" {
   key_name = "a-key-steve-dev-ane2-bastion-console01"
 }
+
+# Steve Golden AMI
+data "aws_ami" "golden" {
+  most_recent = true
+  owners      = ["self"]
+
+  filter {
+    name   = "name"
+    values = ["steve-al2023-golden-v1"]
+  }
+}
+
+data "aws_key_pair" "web" {
+  key_name = "a-key-steve-dev-ane2-bastion-console01"
+}

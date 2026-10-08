@@ -443,3 +443,16 @@ variable "aurora_iam_database_authentication_enabled" {
   default     = false
   description = "Whether IAM database authentication is enabled"
 }
+
+# WEB EC2
+variable "web_instance_type" {
+  type        = string
+  default     = "t3.micro"
+  description = "Instance type for Web EC2"
+}
+
+variable "web_instance_count" {
+  type        = number
+  default     = 2
+  description = "Number of Web EC2 instances"
+}
