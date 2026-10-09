@@ -65,3 +65,38 @@ resource "aws_instance" "bastion" {
     Name = "steve-web-${count.index + 1}"
   }
 }*/
+
+/*# OpenVPN EC2
+resource "aws_instance" "openvpn" {
+  ami                         = data.aws_ami.golden.id
+  instance_type               = "t3.micro"
+  subnet_id                   = aws_subnet.public["public_a"].id
+  vpc_security_group_ids      = [aws_security_group.openvpn.id]
+  associate_public_ip_address = true
+
+  key_name = data.aws_key_pair.web.key_name
+
+  root_block_device {
+    volume_type = "gp3"
+    volume_size = 8
+    encrypted   = true
+  }
+
+  user_data = <<-EOF
+    #!/bin/bash
+    dnf update -y 
+    echo "OpenVPN EC2 initialization" > /tmp/openvpn-init.log
+  EOF
+
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+  }
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${local.provider}-ec2-${local.project}-${local.environment}-${local.region_code}-openvpn01"
+    }
+  )
+}  */

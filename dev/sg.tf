@@ -271,3 +271,32 @@ resource "aws_vpc_security_group_egress_rule" "web" {
 
   description = "Allow outbound traffic"
 }
+
+# OpenVPN Security Group
+resource "aws_security_group" "openvpn" {
+  name        = "${local.provider}-sg-${local.project}-${local.environment}-${local.region_code}-openvpn"
+  description = "OpenVPN Security Group"
+  vpc_id      = aws_vpc.main.id
+
+  tags = merge(
+    local.common_tags, {
+      Name = "${local.provider}-sg-${local.project}-${local.environment}-${local.region_code}-openvpn"
+    }
+  )
+}
+
+resource "aws_vpc_security_group_ingress_rule" "openvpn_udp" {
+  security_group_id = aws_security_group.openvpn.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 1194
+  to_port           = 1194
+  ip_protocol       = "udp"
+  description       = "OpenVPN UDP 1194"
+}
+
+resource "aws_vpc_security_group_egress_rule" "openvpn" {
+  security_group_id = aws_security_group.openvpn.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1"
+  description       = "Allow outbound"
+}
