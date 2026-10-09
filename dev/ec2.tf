@@ -43,7 +43,7 @@ resource "aws_instance" "bastion" {
 }
 */
 
-resource "aws_instance" "web" {
+/*resource "aws_instance" "web" {
   count = var.web_instance_count
 
   ami           = data.aws_ami.golden.id
@@ -64,4 +64,4 @@ resource "aws_instance" "web" {
   tags = {
     Name = "steve-web-${count.index + 1}"
   }
-}
+}*/

@@ -58,3 +58,11 @@ resource "aws_lb_target_group" "alb" {
     }
   )
 }
+
+/*resource "aws_lb_target_group_attachment" "web" {
+  count = var.web_instance_count
+
+  target_group_arn = aws_lb_target_group.alb.arn
+  target_id        = aws_instance.web[count.index].id
+  port             = var.alb_tg_port
+}*/
