@@ -38,3 +38,18 @@ data "aws_ami" "golden" {
 data "aws_key_pair" "web" {
   key_name = "a-key-steve-dev-ane2-bastion-console01"
 }
+
+data "aws_ami" "openvpn" {
+  most_recent = true
+  owners      = ["self"]
+
+  filter {
+    name   = "name"
+    values = ["steve-al2023-openvpn-golden-v1"]
+  }
+
+  filter {
+    name   = "state"
+    values = ["available"]
+  }
+}

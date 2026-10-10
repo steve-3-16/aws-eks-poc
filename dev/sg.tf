@@ -294,6 +294,17 @@ resource "aws_vpc_security_group_ingress_rule" "openvpn_udp" {
   description       = "OpenVPN UDP 1194"
 }
 
+resource "aws_vpc_security_group_ingress_rule" "openvpn_ssh" {
+  security_group_id = aws_security_group.openvpn.id
+
+  cidr_ipv4   = "182.231.63.14/32"
+  from_port   = 22
+  to_port     = 22
+  ip_protocol = "tcp"
+
+  description = "SSH access from my PC"
+}
+
 resource "aws_vpc_security_group_egress_rule" "openvpn" {
   security_group_id = aws_security_group.openvpn.id
   cidr_ipv4         = "0.0.0.0/0"

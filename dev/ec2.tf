@@ -66,37 +66,66 @@ resource "aws_instance" "bastion" {
   }
 }*/
 
-/*# OpenVPN EC2
-resource "aws_instance" "openvpn" {
-  ami                         = data.aws_ami.golden.id
-  instance_type               = "t3.micro"
+
+# ============================================================
+# OpenVPN EC2 - Custom Golden AMI
+# ============================================================
+
+/*resource "aws_instance" "openvpn" {
+  ami           = data.aws_ami.openvpn.id
+  instance_type = "t3.micro"
+
   subnet_id                   = aws_subnet.public["public_a"].id
   vpc_security_group_ids      = [aws_security_group.openvpn.id]
   associate_public_ip_address = true
 
+  # VPN Routing
+  source_dest_check = false
+
+  # SSH Key Pair
   key_name = data.aws_key_pair.web.key_name
 
+  # EBS Root Volume
   root_block_device {
-    volume_type = "gp3"
-    volume_size = 8
-    encrypted   = true
+    volume_type           = "gp3"
+    volume_size           = 8
+    encrypted             = true
+    delete_on_termination = true
   }
 
+  # EC2 Initialization
   user_data = <<-EOF
     #!/bin/bash
-    dnf update -y 
-    echo "OpenVPN EC2 initialization" > /tmp/openvpn-init.log
+    set -euo pipefail
+
+    exec > >(tee -a /var/log/openvpn-init.log) 2>&1
+
+    echo "=== OpenVPN EC2 initialization started ==="
+
+    # Enable IP Forwarding
+    echo "net.ipv4.ip_forward = 1" > /etc/sysctl.d/99-openvpn.conf
+    sysctl -w net.ipv4.ip_forward=1
+
+    # Start OpenVPN Firewall Service
+    systemctl enable --now openvpn-firewall.service
+
+    # Start OpenVPN Server
+    systemctl enable --now openvpn-server@server.service
+
+    echo "=== OpenVPN EC2 initialization completed ==="
   EOF
 
+  # IMDSv2
   metadata_options {
     http_endpoint = "enabled"
     http_tokens   = "required"
   }
 
+  # Resource Tags
   tags = merge(
     local.common_tags,
     {
       Name = "${local.provider}-ec2-${local.project}-${local.environment}-${local.region_code}-openvpn01"
     }
   )
-}  */
+}*/
