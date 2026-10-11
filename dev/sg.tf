@@ -311,3 +311,25 @@ resource "aws_vpc_security_group_egress_rule" "openvpn" {
   ip_protocol       = "-1"
   description       = "Allow outbound"
 }
+
+module "test_sg" {
+  source      = "../modules/security/security-group"
+  name        = "test_sg"
+  description = "Terraform module test security group"
+  vpc_id      = "vpc-01c70d52ff6c3144e"
+
+  ingress = [
+    { from_port = 22, to_port = 22, ip_protocol = "tcp", cidr_ipv4 = "0.0.0.0/0", description = "SSH access" },
+    { from_port = 443, to_port = 443, ip_protocol = "tcp", cidr_ipv4 = "0.0.0.0/0", description = "HTTPS access" }
+  ]
+
+  egress = [
+    { from_port = 0, to_port = 0, ip_protocol = "-1", cidr_ipv4 = "0.0.0.0/0", description = "Allow all outbound" }
+  ]
+
+  tags = {
+    Name        = "test-sg"
+    Environment = "dev"
+    project     = "eks-poc"
+  }
+}
