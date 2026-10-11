@@ -324,7 +324,7 @@ module "test_sg" {
   ]
 
   egress = [
-    { from_port = 0, to_port = 0, ip_protocol = "-1", cidr_ipv4 = "0.0.0.0/0", description = "Allow all outbound" }
+    { from_port = -1, to_port = -1, ip_protocol = "-1", cidr_ipv4 = "0.0.0.0/0", description = "Allow all outbound" }
   ]
 
   tags = {

@@ -14,3 +14,12 @@ resource "aws_ecr_repository" "app" {
     Name = "${local.provider}-ecr-${local.project}-${local.environment}-${local.region_code}-app01"
   })
 }
+
+module "ecr_app" {
+  source = "../modules/container/ecr"
+  name   = "app"
+
+  tags = {
+    Environment = "dev"
+  }
+}
