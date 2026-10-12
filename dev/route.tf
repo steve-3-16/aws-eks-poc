@@ -1,5 +1,6 @@
+
 resource "aws_route_table" "public_a" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = module.vpc.vpc_id
 
   tags = {
     Name = "a-irot-steve-dev-ane2-pub01"
@@ -7,7 +8,7 @@ resource "aws_route_table" "public_a" {
 }
 
 resource "aws_route_table" "public_c" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = module.vpc.vpc_id
 
   tags = {
     Name = "a-irot-steve-dev-ane2-pub02"
@@ -15,7 +16,7 @@ resource "aws_route_table" "public_c" {
 }
 
 resource "aws_route_table" "elb_a" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = module.vpc.vpc_id
 
   tags = {
     Name = "a-irot-steve-dev-ane2-elb01"
@@ -23,7 +24,7 @@ resource "aws_route_table" "elb_a" {
 }
 
 resource "aws_route_table" "elb_c" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = module.vpc.vpc_id
 
   tags = {
     Name = "a-irot-steve-dev-ane2-elb02"
@@ -33,7 +34,7 @@ resource "aws_route_table" "elb_c" {
 resource "aws_route_table" "compute" {
   count = 2
 
-  vpc_id = aws_vpc.main.id
+  vpc_id = module.vpc.vpc_id
 
   tags = merge(
     local.common_tags,
@@ -56,14 +57,14 @@ resource "aws_route" "public_c" {
   gateway_id             = aws_internet_gateway.main.id
 }
 
-# Private subnet association
+# ELB subnet association
 resource "aws_route_table_association" "elb_a" {
-  subnet_id      = aws_subnet.elb["elb_a"].id
+  subnet_id      = module.subnet.subnet_ids["elb_a"]
   route_table_id = aws_route_table.elb_a.id
 }
 
 resource "aws_route_table_association" "elb_c" {
-  subnet_id      = aws_subnet.elb["elb_c"].id
+  subnet_id      = module.subnet.subnet_ids["elb_c"]
   route_table_id = aws_route_table.elb_c.id
 }
 
@@ -71,13 +72,13 @@ resource "aws_route_table_association" "elb_c" {
 resource "aws_route_table_association" "compute" {
   count = 2
 
-  subnet_id      = aws_subnet.compute[count.index].id
+  subnet_id      = module.subnet.subnet_ids[["compute_a", "compute_c"][count.index]]
   route_table_id = aws_route_table.compute[count.index].id
 }
 
 # Bastion public subnet association
 resource "aws_route_table_association" "bastion_public" {
-  subnet_id      = aws_subnet.public["public_a"].id
+  subnet_id      = module.subnet.subnet_ids["public_a"]
   route_table_id = aws_route_table.public_a.id
 }
 
@@ -85,7 +86,7 @@ resource "aws_route_table_association" "bastion_public" {
 resource "aws_route_table" "vpce" {
   count = 2
 
-  vpc_id = aws_vpc.main.id
+  vpc_id = module.vpc.vpc_id
 
   tags = merge(
     local.common_tags,
@@ -95,11 +96,11 @@ resource "aws_route_table" "vpce" {
   )
 }
 
-# Compute subnet association
+# VPCE subnet association
 resource "aws_route_table_association" "vpce" {
   count = 2
 
-  subnet_id      = aws_subnet.vpce[count.index].id
+  subnet_id      = module.subnet.subnet_ids[["vpce_a", "vpce_c"][count.index]]
   route_table_id = aws_route_table.vpce[count.index].id
 }
 
@@ -107,7 +108,7 @@ resource "aws_route_table_association" "vpce" {
 resource "aws_route_table" "db" {
   count = 2
 
-  vpc_id = aws_vpc.main.id
+  vpc_id = module.vpc.vpc_id
 
   tags = merge(local.common_tags, {
     Name = "${local.provider}-irot-${local.project}-${local.environment}-${local.region_code}-db0${count.index + 1}"
@@ -117,16 +118,15 @@ resource "aws_route_table" "db" {
 resource "aws_route_table_association" "db" {
   count = 2
 
-  subnet_id      = aws_subnet.db[count.index].id
+  subnet_id      = module.subnet.subnet_ids[["db_a", "db_c"][count.index]]
   route_table_id = aws_route_table.db[count.index].id
 }
-
 
 # TGW Route Table
 resource "aws_route_table" "tgw" {
   count = 2
 
-  vpc_id = aws_vpc.main.id
+  vpc_id = module.vpc.vpc_id
 
   tags = merge(local.common_tags, {
     Name = "${local.provider}-irot-${local.project}-${local.environment}-${local.region_code}-tgw0${count.index + 1}"
@@ -136,13 +136,13 @@ resource "aws_route_table" "tgw" {
 resource "aws_route_table_association" "tgw" {
   count = 2
 
-  subnet_id      = aws_subnet.tgw[count.index].id
+  subnet_id      = module.subnet.subnet_ids[["tgw_a", "tgw_c"][count.index]]
   route_table_id = aws_route_table.tgw[count.index].id
 }
 
-# EKS RouteTable , association
+# EKS Route Table
 resource "aws_route_table" "eks_a" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = module.vpc.vpc_id
 
   tags = {
     Name = "a-irot-steve-dev-ane2-eks01"
@@ -150,20 +150,20 @@ resource "aws_route_table" "eks_a" {
 }
 
 resource "aws_route_table" "eks_c" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = module.vpc.vpc_id
 
   tags = {
     Name = "a-irot-steve-dev-ane2-eks02"
   }
 }
 
+# EKS subnet association
 resource "aws_route_table_association" "eks_a" {
-  subnet_id      = aws_subnet.eks[0].id
+  subnet_id      = module.subnet.subnet_ids["eks_a"]
   route_table_id = aws_route_table.eks_a.id
 }
 
 resource "aws_route_table_association" "eks_c" {
-  subnet_id      = aws_subnet.eks[1].id
+  subnet_id      = module.subnet.subnet_ids["eks_c"]
   route_table_id = aws_route_table.eks_c.id
 }
-

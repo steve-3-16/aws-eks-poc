@@ -1,5 +1,5 @@
 resource "aws_internet_gateway" "main" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = module.vpc.vpc_id
 
   tags = merge(
     local.common_tags,

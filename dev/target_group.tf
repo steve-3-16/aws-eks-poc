@@ -3,7 +3,7 @@
   port        = var.nlb_tg_port
   protocol    = var.nlb_tg_protocol
   target_type = "instance"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.vpc.vpc_id
 
   health_check {
     enabled             = true
@@ -37,7 +37,7 @@ resource "aws_lb_target_group" "alb" {
   port        = var.alb_tg_port
   protocol    = var.alb_tg_protocol
   target_type = "instance"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.vpc.vpc_id
 
   health_check {
     enabled             = true

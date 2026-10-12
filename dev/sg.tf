@@ -1,6 +1,6 @@
 resource "aws_security_group" "import_test" {
   name        = "a-isg-steve-dev-ane2-import01"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.vpc.vpc_id
   description = "a-isg-steve-dev-ane2-import01"
 
   tags = {
@@ -11,7 +11,7 @@ resource "aws_security_group" "import_test" {
 resource "aws_security_group" "bastion" {
   name        = "a-isg-steve-dev-ane2-bastion01"
   description = "Security group for bastion"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.vpc.vpc_id
 
   tags = {
     Name = "a-isg-steve-dev-ane2-bastion01"
@@ -54,7 +54,7 @@ resource "aws_vpc_security_group_egress_rule" "bastion_https" {
 resource "aws_security_group" "import02" {
   name        = "a-isg-steve-dev-ane2-import02"
   description = "a-isg-steve-dev-ane2-import02"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.vpc.vpc_id
 
   tags = {
     Name = "a-isg-steve-dev-ane2-import02"
@@ -64,7 +64,7 @@ resource "aws_security_group" "import02" {
 resource "aws_security_group" "common" {
   name        = "a-isg-steve-dev-ane2-common01"
   description = "Common security group"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.vpc.vpc_id
 
   tags = merge(
     local.common_tags,
@@ -82,7 +82,7 @@ resource "aws_security_group" "common" {
 resource "aws_security_group" "vpce" {
   name        = "${local.provider}-isg-${local.project}-${local.environment}-${local.region_code}-vpce01"
   description = "Security group for interface VPC endpoints"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.vpc.vpc_id
 
   tags = merge(
     local.common_tags,
@@ -111,7 +111,7 @@ resource "aws_vpc_security_group_ingress_rule" "vpce_https" {
 resource "aws_security_group" "vpce_ecr" {
   name        = "${local.provider}-isg-${local.project}-${local.environment}-${local.region_code}-vpce-ecr01"
   description = "Security group for ECR interface VPC endpoints"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.vpc.vpc_id
 
   tags = merge(
     local.common_tags,
@@ -139,7 +139,7 @@ resource "aws_vpc_security_group_ingress_rule" "vpce_ecr_https" {
 resource "aws_security_group" "private_nlb" {
   name        = "${local.provider}-esg-${local.project}-${local.environment}-${local.region_code}-nlb01"
   description = "Security group for private NLB"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.vpc.vpc_id
 
   tags = merge(
     local.common_tags,
@@ -178,7 +178,7 @@ resource "aws_vpc_security_group_egress_rule" "private_nlb" {
 resource "aws_security_group" "aurora_mysql" {
   name        = "${local.provider}-isg-${local.project}-${local.environment}-${local.region_code}-aurora-mysql01"
   description = "Security group for Aurora MySQL"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.vpc.vpc_id
 
   tags = merge(
     local.common_tags,
@@ -204,7 +204,7 @@ resource "aws_vpc_security_group_ingress_rule" "aurora_mysql" {
 resource "aws_security_group" "alb" {
   name        = "${local.provider}-esg-${local.project}-${local.environment}-${local.region_code}-alb01"
   description = "Security group for ALB"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.vpc.vpc_id
 
   tags = merge(
     local.common_tags,
@@ -239,7 +239,7 @@ resource "aws_vpc_security_group_egress_rule" "alb" {
 resource "aws_security_group" "web" {
   name        = "${local.provider}-isg-${local.project}-${local.environment}-${local.region_code}-web01"
   description = "Security group for Web EC2"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.vpc.vpc_id
 
   tags = merge(
     local.common_tags,
@@ -276,7 +276,7 @@ resource "aws_vpc_security_group_egress_rule" "web" {
 resource "aws_security_group" "openvpn" {
   name        = "${local.provider}-sg-${local.project}-${local.environment}-${local.region_code}-openvpn"
   description = "OpenVPN Security Group"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.vpc.vpc_id
 
   tags = merge(
     local.common_tags, {

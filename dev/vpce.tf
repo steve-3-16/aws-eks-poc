@@ -1,5 +1,5 @@
 resource "aws_vpc_endpoint" "s3" {
-  vpc_id            = aws_vpc.main.id
+  vpc_id            = module.vpc.vpc_id
   service_name      = "com.amazonaws.ap-northeast-2.s3"
   vpc_endpoint_type = "Gateway"
 
@@ -24,7 +24,7 @@ resource "aws_vpc_endpoint" "s3" {
 
 /*# ECR 관리/API 통신
 resource "aws_vpc_endpoint" "ecr_api" {
-  vpc_id              = aws_vpc.main.id
+  vpc_id              = module.vpc.vpc_id
   service_name        = "com.amazonaws.ap-northeast-2.ecr.api"
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
@@ -48,7 +48,7 @@ resource "aws_vpc_endpoint" "ecr_api" {
 
 # Docker 이미지 Push/Pull 통신
 resource "aws_vpc_endpoint" "ecr_dkr" {
-  vpc_id              = aws_vpc.main.id
+  vpc_id              = module.vpc.vpc_id
   service_name        = "com.amazonaws.ap-northeast-2.ecr.dkr"
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
@@ -72,7 +72,7 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
 
 # AWS 임시 자격증명/Role 인증 관련 통신
 resource "aws_vpc_endpoint" "sts" {
-  vpc_id              = aws_vpc.main.id
+  vpc_id              = module.vpc.vpc_id
   service_name        = "com.amazonaws.ap-northeast-2.sts"
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
@@ -96,7 +96,7 @@ resource "aws_vpc_endpoint" "sts" {
 
 # EC2 API 통신
 resource "aws_vpc_endpoint" "ec2" {
-  vpc_id              = aws_vpc.main.id
+  vpc_id              = module.vpc.vpc_id
   service_name        = "com.amazonaws.ap-northeast-2.ec2"
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
@@ -120,7 +120,7 @@ resource "aws_vpc_endpoint" "ec2" {
 
 # EKS Pod Identity
 resource "aws_vpc_endpoint" "eks_auth" {
-  vpc_id              = aws_vpc.main.id
+  vpc_id              = module.vpc.vpc_id
   service_name        = "com.amazonaws.ap-northeast-2.eks-auth"
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
@@ -144,7 +144,7 @@ resource "aws_vpc_endpoint" "eks_auth" {
 
 # CloudWatch Logs
 resource "aws_vpc_endpoint" "logs" {
-  vpc_id              = aws_vpc.main.id
+  vpc_id              = module.vpc.vpc_id
   service_name        = "com.amazonaws.ap-northeast-2.logs"
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
@@ -168,7 +168,7 @@ resource "aws_vpc_endpoint" "logs" {
 
 # CloudWatch Metrics
 resource "aws_vpc_endpoint" "monitoring" {
-  vpc_id              = aws_vpc.main.id
+  vpc_id              = module.vpc.vpc_id
   service_name        = "com.amazonaws.ap-northeast-2.monitoring"
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
@@ -192,7 +192,7 @@ resource "aws_vpc_endpoint" "monitoring" {
 
 # ALB / NLB API
 resource "aws_vpc_endpoint" "elasticloadbalancing" {
-  vpc_id              = aws_vpc.main.id
+  vpc_id              = module.vpc.vpc_id
   service_name        = "com.amazonaws.ap-northeast-2.elasticloadbalancing"
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
@@ -216,7 +216,7 @@ resource "aws_vpc_endpoint" "elasticloadbalancing" {
 
 # AWS X-Ray - Optional
 resource "aws_vpc_endpoint" "xray" {
-  vpc_id              = aws_vpc.main.id
+  vpc_id              = module.vpc.vpc_id
   service_name        = "com.amazonaws.ap-northeast-2.xray"
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
