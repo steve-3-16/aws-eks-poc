@@ -89,3 +89,176 @@ moved {
   from = aws_subnet.eks[1]
   to   = module.subnet.aws_subnet.this["eks_c"]
 }
+
+# ==========================================
+# Route Table (14)
+# ==========================================
+
+# Public
+moved {
+  from = aws_route_table.public_a
+  to   = module.route_table.aws_route_table.this["public_a"]
+}
+
+moved {
+  from = aws_route_table.public_c
+  to   = module.route_table.aws_route_table.this["public_c"]
+}
+
+# ELB
+moved {
+  from = aws_route_table.elb_a
+  to   = module.route_table.aws_route_table.this["elb_a"]
+}
+
+moved {
+  from = aws_route_table.elb_c
+  to   = module.route_table.aws_route_table.this["elb_c"]
+}
+
+# Compute
+moved {
+  from = aws_route_table.compute[0]
+  to   = module.route_table.aws_route_table.this["compute_a"]
+}
+
+moved {
+  from = aws_route_table.compute[1]
+  to   = module.route_table.aws_route_table.this["compute_c"]
+}
+
+# VPCE
+moved {
+  from = aws_route_table.vpce[0]
+  to   = module.route_table.aws_route_table.this["vpce_a"]
+}
+
+moved {
+  from = aws_route_table.vpce[1]
+  to   = module.route_table.aws_route_table.this["vpce_c"]
+}
+
+# DB
+moved {
+  from = aws_route_table.db[0]
+  to   = module.route_table.aws_route_table.this["db_a"]
+}
+
+moved {
+  from = aws_route_table.db[1]
+  to   = module.route_table.aws_route_table.this["db_c"]
+}
+
+# TGW
+moved {
+  from = aws_route_table.tgw[0]
+  to   = module.route_table.aws_route_table.this["tgw_a"]
+}
+
+moved {
+  from = aws_route_table.tgw[1]
+  to   = module.route_table.aws_route_table.this["tgw_c"]
+}
+
+# EKS
+moved {
+  from = aws_route_table.eks_a
+  to   = module.route_table.aws_route_table.this["eks_a"]
+}
+
+moved {
+  from = aws_route_table.eks_c
+  to   = module.route_table.aws_route_table.this["eks_c"]
+}
+
+
+# ==========================================
+# Route Table Association (13)
+# ==========================================
+
+# Public A (Bastion)
+moved {
+  from = aws_route_table_association.bastion_public
+  to   = module.route_table.aws_route_table_association.this["public_a"]
+}
+
+# ELB
+moved {
+  from = aws_route_table_association.elb_a
+  to   = module.route_table.aws_route_table_association.this["elb_a"]
+}
+
+moved {
+  from = aws_route_table_association.elb_c
+  to   = module.route_table.aws_route_table_association.this["elb_c"]
+}
+
+# Compute
+moved {
+  from = aws_route_table_association.compute[0]
+  to   = module.route_table.aws_route_table_association.this["compute_a"]
+}
+
+moved {
+  from = aws_route_table_association.compute[1]
+  to   = module.route_table.aws_route_table_association.this["compute_c"]
+}
+
+# VPCE
+moved {
+  from = aws_route_table_association.vpce[0]
+  to   = module.route_table.aws_route_table_association.this["vpce_a"]
+}
+
+moved {
+  from = aws_route_table_association.vpce[1]
+  to   = module.route_table.aws_route_table_association.this["vpce_c"]
+}
+
+# DB
+moved {
+  from = aws_route_table_association.db[0]
+  to   = module.route_table.aws_route_table_association.this["db_a"]
+}
+
+moved {
+  from = aws_route_table_association.db[1]
+  to   = module.route_table.aws_route_table_association.this["db_c"]
+}
+
+# TGW
+moved {
+  from = aws_route_table_association.tgw[0]
+  to   = module.route_table.aws_route_table_association.this["tgw_a"]
+}
+
+moved {
+  from = aws_route_table_association.tgw[1]
+  to   = module.route_table.aws_route_table_association.this["tgw_c"]
+}
+
+# EKS
+moved {
+  from = aws_route_table_association.eks_a
+  to   = module.route_table.aws_route_table_association.this["eks_a"]
+}
+
+moved {
+  from = aws_route_table_association.eks_c
+  to   = module.route_table.aws_route_table_association.this["eks_c"]
+}
+
+
+# ==========================================
+# Route (2)
+# ==========================================
+
+moved {
+  from = aws_route.public_a
+  to   = module.route_table.aws_route.this["public_a"]
+}
+
+moved {
+  from = aws_route.public_c
+  to   = module.route_table.aws_route.this["public_c"]
+}

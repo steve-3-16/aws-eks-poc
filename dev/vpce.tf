@@ -4,14 +4,12 @@ resource "aws_vpc_endpoint" "s3" {
   vpc_endpoint_type = "Gateway"
 
   route_table_ids = [
-    aws_route_table.public_a.id,
-    aws_route_table.public_c.id,
-    aws_route_table.compute[0].id,
-    aws_route_table.compute[1].id,
-    aws_route_table.vpce[0].id,
-    aws_route_table.vpce[1].id,
-    aws_route_table.eks_a.id,
-    aws_route_table.eks_c.id
+    module.route_table.route_table_ids["compute_a"],
+    module.route_table.route_table_ids["compute_c"],
+    module.route_table.route_table_ids["vpce_a"],
+    module.route_table.route_table_ids["vpce_c"],
+    module.route_table.route_table_ids["eks_a"],
+    module.route_table.route_table_ids["eks_c"]
   ]
 
   tags = merge(

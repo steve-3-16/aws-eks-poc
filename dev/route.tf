@@ -1,169 +1,80 @@
 
-resource "aws_route_table" "public_a" {
-  vpc_id = module.vpc.vpc_id
+# ==========================================
+# Route Table - Locals
+# ==========================================
 
-  tags = {
-    Name = "a-irot-steve-dev-ane2-pub01"
+locals {
+  route_table_prefix = "${local.provider}-irot-${local.project}-${local.environment}-${local.region_code}"
+
+  route_table_configs = {
+    # Public
+    public_a = { name = "${local.route_table_prefix}-pub01" }
+    public_c = { name = "${local.route_table_prefix}-pub02" }
+
+    # ELB
+    elb_a = { name = "${local.route_table_prefix}-elb01" }
+    elb_c = { name = "${local.route_table_prefix}-elb02" }
+
+    # Compute
+    compute_a = { name = "${local.route_table_prefix}-compute01" }
+    compute_c = { name = "${local.route_table_prefix}-compute02" }
+
+    # VPCE
+    vpce_a = { name = "${local.route_table_prefix}-vpce01" }
+    vpce_c = { name = "${local.route_table_prefix}-vpce02" }
+
+    # DB
+    db_a = { name = "${local.route_table_prefix}-db01" }
+    db_c = { name = "${local.route_table_prefix}-db02" }
+
+    # TGW
+    tgw_a = { name = "${local.route_table_prefix}-tgw01" }
+    tgw_c = { name = "${local.route_table_prefix}-tgw02" }
+
+    # EKS
+    eks_a = { name = "${local.route_table_prefix}-eks01" }
+    eks_c = { name = "${local.route_table_prefix}-eks02" }
   }
 }
 
-resource "aws_route_table" "public_c" {
-  vpc_id = module.vpc.vpc_id
 
-  tags = {
-    Name = "a-irot-steve-dev-ane2-pub02"
-  }
-}
+# ==========================================
+# Route Table Module
+# ==========================================
 
-resource "aws_route_table" "elb_a" {
-  vpc_id = module.vpc.vpc_id
+module "route_table" {
+  source = "../modules/network/route_table"
 
-  tags = {
-    Name = "a-irot-steve-dev-ane2-elb01"
-  }
-}
+  # Common
+  vpc_id      = module.vpc.vpc_id
+  subnet_ids  = module.subnet.subnet_ids
+  common_tags = local.common_tags
 
-resource "aws_route_table" "elb_c" {
-  vpc_id = module.vpc.vpc_id
+  # Route Tables
+  route_tables = local.route_table_configs
 
-  tags = {
-    Name = "a-irot-steve-dev-ane2-elb02"
-  }
-}
-
-resource "aws_route_table" "compute" {
-  count = 2
-
-  vpc_id = module.vpc.vpc_id
-
-  tags = merge(
-    local.common_tags,
-    {
-      Name = "${local.provider}-irot-${local.project}-${local.environment}-${local.region_code}-compute0${count.index + 1}"
+  # Subnet Associations
+  route_table_associations = {
+    for key in keys(local.route_table_configs) : key => {
+      subnet_key      = key
+      route_table_key = key
     }
-  )
-}
+  }
 
-# Public → Internet Gateway
-resource "aws_route" "public_a" {
-  route_table_id         = aws_route_table.public_a.id
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.main.id
-}
-
-resource "aws_route" "public_c" {
-  route_table_id         = aws_route_table.public_c.id
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.main.id
-}
-
-# ELB subnet association
-resource "aws_route_table_association" "elb_a" {
-  subnet_id      = module.subnet.subnet_ids["elb_a"]
-  route_table_id = aws_route_table.elb_a.id
-}
-
-resource "aws_route_table_association" "elb_c" {
-  subnet_id      = module.subnet.subnet_ids["elb_c"]
-  route_table_id = aws_route_table.elb_c.id
-}
-
-# Compute subnet association
-resource "aws_route_table_association" "compute" {
-  count = 2
-
-  subnet_id      = module.subnet.subnet_ids[["compute_a", "compute_c"][count.index]]
-  route_table_id = aws_route_table.compute[count.index].id
-}
-
-# Bastion public subnet association
-resource "aws_route_table_association" "bastion_public" {
-  subnet_id      = module.subnet.subnet_ids["public_a"]
-  route_table_id = aws_route_table.public_a.id
-}
-
-# VPCE Route Table
-resource "aws_route_table" "vpce" {
-  count = 2
-
-  vpc_id = module.vpc.vpc_id
-
-  tags = merge(
-    local.common_tags,
-    {
-      Name = "${local.provider}-irot-${local.project}-${local.environment}-${local.region_code}-vpce0${count.index + 1}"
+  # Routes
+  routes = {
+    # Public A -> Internet Gateway
+    public_a = {
+      route_table_key        = "public_a"
+      destination_cidr_block = "0.0.0.0/0"
+      gateway_id             = aws_internet_gateway.main.id
     }
-  )
-}
 
-# VPCE subnet association
-resource "aws_route_table_association" "vpce" {
-  count = 2
-
-  subnet_id      = module.subnet.subnet_ids[["vpce_a", "vpce_c"][count.index]]
-  route_table_id = aws_route_table.vpce[count.index].id
-}
-
-# DB Route Table
-resource "aws_route_table" "db" {
-  count = 2
-
-  vpc_id = module.vpc.vpc_id
-
-  tags = merge(local.common_tags, {
-    Name = "${local.provider}-irot-${local.project}-${local.environment}-${local.region_code}-db0${count.index + 1}"
-  })
-}
-
-resource "aws_route_table_association" "db" {
-  count = 2
-
-  subnet_id      = module.subnet.subnet_ids[["db_a", "db_c"][count.index]]
-  route_table_id = aws_route_table.db[count.index].id
-}
-
-# TGW Route Table
-resource "aws_route_table" "tgw" {
-  count = 2
-
-  vpc_id = module.vpc.vpc_id
-
-  tags = merge(local.common_tags, {
-    Name = "${local.provider}-irot-${local.project}-${local.environment}-${local.region_code}-tgw0${count.index + 1}"
-  })
-}
-
-resource "aws_route_table_association" "tgw" {
-  count = 2
-
-  subnet_id      = module.subnet.subnet_ids[["tgw_a", "tgw_c"][count.index]]
-  route_table_id = aws_route_table.tgw[count.index].id
-}
-
-# EKS Route Table
-resource "aws_route_table" "eks_a" {
-  vpc_id = module.vpc.vpc_id
-
-  tags = {
-    Name = "a-irot-steve-dev-ane2-eks01"
+    # Public C -> Internet Gateway
+    public_c = {
+      route_table_key        = "public_c"
+      destination_cidr_block = "0.0.0.0/0"
+      gateway_id             = aws_internet_gateway.main.id
+    }
   }
-}
-
-resource "aws_route_table" "eks_c" {
-  vpc_id = module.vpc.vpc_id
-
-  tags = {
-    Name = "a-irot-steve-dev-ane2-eks02"
-  }
-}
-
-# EKS subnet association
-resource "aws_route_table_association" "eks_a" {
-  subnet_id      = module.subnet.subnet_ids["eks_a"]
-  route_table_id = aws_route_table.eks_a.id
-}
-
-resource "aws_route_table_association" "eks_c" {
-  subnet_id      = module.subnet.subnet_ids["eks_c"]
-  route_table_id = aws_route_table.eks_c.id
 }
