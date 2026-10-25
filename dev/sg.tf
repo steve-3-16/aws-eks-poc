@@ -28,17 +28,6 @@ resource "aws_vpc_security_group_ingress_rule" "bastion_ssh" {
   ip_protocol                  = "tcp"
 }
 
-# Ingress : Home public IP → Bastion SSH 22
-resource "aws_vpc_security_group_ingress_rule" "bastion_home_ssh" {
-  security_group_id = aws_security_group.bastion.id
-
-  description = "Allow SSH from my public IP"
-  ip_protocol = "tcp"
-  from_port   = 22
-  to_port     = 22
-  cidr_ipv4   = "182.231.63.14/32"
-}
-
 # Egress : Bastion → HTTPS 443
 resource "aws_vpc_security_group_egress_rule" "bastion_https" {
   security_group_id = aws_security_group.bastion.id
@@ -294,17 +283,6 @@ resource "aws_vpc_security_group_ingress_rule" "openvpn_udp" {
   description       = "OpenVPN UDP 1194"
 }
 
-resource "aws_vpc_security_group_ingress_rule" "openvpn_ssh" {
-  security_group_id = aws_security_group.openvpn.id
-
-  cidr_ipv4   = "182.231.63.14/32"
-  from_port   = 22
-  to_port     = 22
-  ip_protocol = "tcp"
-
-  description = "SSH access from my PC"
-}
-
 resource "aws_vpc_security_group_egress_rule" "openvpn" {
   security_group_id = aws_security_group.openvpn.id
   cidr_ipv4         = "0.0.0.0/0"
@@ -312,24 +290,24 @@ resource "aws_vpc_security_group_egress_rule" "openvpn" {
   description       = "Allow outbound"
 }
 
-module "test_sg" {
-  source      = "../modules/security/security-group"
-  name        = "test_sg"
-  description = "Terraform module test security group"
-  vpc_id      = "vpc-01c70d52ff6c3144e"
+resource "aws_vpc_security_group_ingress_rule" "bastion_home_ssh" {
+  security_group_id = aws_security_group.bastion.id
 
-  ingress = [
-    { from_port = 22, to_port = 22, ip_protocol = "tcp", cidr_ipv4 = "0.0.0.0/0", description = "SSH access" },
-    { from_port = 443, to_port = 443, ip_protocol = "tcp", cidr_ipv4 = "0.0.0.0/0", description = "HTTPS access" }
-  ]
+  cidr_ipv4   = var.admin_ssh_cidr
+  from_port   = 22
+  to_port     = 22
+  ip_protocol = "tcp"
 
-  egress = [
-    { from_port = -1, to_port = -1, ip_protocol = "-1", cidr_ipv4 = "0.0.0.0/0", description = "Allow all outbound" }
-  ]
+  description = "SSH access from my PC"
+}
 
-  tags = {
-    Name        = "test-sg"
-    Environment = "dev"
-    project     = "eks-poc"
-  }
+resource "aws_vpc_security_group_ingress_rule" "openvpn_ssh" {
+  security_group_id = aws_security_group.openvpn.id
+
+  cidr_ipv4   = var.admin_ssh_cidr
+  from_port   = 22
+  to_port     = 22
+  ip_protocol = "tcp"
+
+  description = "SSH access from my PC"
 }

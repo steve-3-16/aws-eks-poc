@@ -47,3 +47,8 @@ variable "tags" {
   type = map(string)
   default = {}
 }
+
+#variable "admin_ssh_cidr" {
+#  description = "Allowed public IP CIDR for SSH access"
+#  type        = string
+#}

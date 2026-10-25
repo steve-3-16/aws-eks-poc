@@ -456,3 +456,6 @@ variable "web_instance_count" {
   default     = 2
   description = "Number of Web EC2 instances"
 }
+variable "admin_ssh_cidr" {
+  type = string
+}
